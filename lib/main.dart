@@ -40,12 +40,48 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Image.asset(
+              'assets/icon/menu.png',
+              height: 18,
+            ),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
+        ),
+        elevation: 0,
+        backgroundColor: Color(0xffDBAC9A),
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       drawer: Drawer(
         child: Container(),
       ),
       body: SafeArea(
         child: Container(
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Container(
+                color: Color(0xffDBAC9A),
+              ),
+              Container(
+                  padding: EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(24),
+                          topRight: Radius.circular(24))),
+                  margin: EdgeInsets.only(top: 60),
+                  child: Container()
+              ),
+              CircleAvatar(
+                radius: 60,
+                backgroundImage: AssetImage('assets/image/profile.png'),
+              ),
+            ],
+          ),
         ),
       ),
     );
