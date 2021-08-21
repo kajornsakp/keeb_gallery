@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:keeb_gallery/utils/utils.dart';
 
 void main() {
   runApp(MyApp());
@@ -59,28 +61,30 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Container(),
       ),
       body: SafeArea(
-        child: Container(
-          child: Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              Container(
-                color: Color(0xffDBAC9A),
-              ),
-              Container(
-                  padding: EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(24),
-                          topRight: Radius.circular(24))),
-                  margin: EdgeInsets.only(top: 60),
-                  child: ContentContainer()
-              ),
-              CircleAvatar(
-                radius: 60,
-                backgroundImage: AssetImage('assets/image/profile.png'),
-              ),
-            ],
+        child: SingleChildScrollView(
+          child: Container(
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                Container(
+                  height: 120,
+                  color: Color(0xffDBAC9A),
+                ),
+                Container(
+                    padding: EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(24),
+                            topRight: Radius.circular(24))),
+                    margin: EdgeInsets.only(top: 60),
+                    child: ContentContainer()),
+                CircleAvatar(
+                  radius: 60,
+                  backgroundImage: AssetImage('assets/image/profile.png'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -137,7 +141,9 @@ class ContentContainer extends StatelessWidget {
               children: [
                 Text(
                   "Saved",
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black.withOpacity(0.7)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black.withOpacity(0.7)),
                 ),
                 SizedBox(height: 4),
                 // Icon(Icons.circle, size: 6, color: Colors.black.withOpacity(0.7),)
@@ -145,6 +151,55 @@ class ContentContainer extends StatelessWidget {
             )
           ],
         ),
+        SizedBox(
+          height: 16,
+        ),
+        StaggeredGridView.countBuilder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          crossAxisCount: 4,
+          itemCount: getGalleryModels().length,
+          itemBuilder: (BuildContext context, int index) {
+            var model = getGalleryModels()[index];
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                  child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(model.imgUrl), fit: BoxFit.cover),
+                    ),
+                  ),
+                  Container(
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                        Colors.white.withOpacity(0.0),
+                        Colors.black.withOpacity(0.6)
+                      ]))),
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        model.name,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  )
+                ],
+              )),
+            );
+          },
+          staggeredTileBuilder: (int index) =>
+              new StaggeredTile.count(2, index.isEven ? 2 : 1),
+          mainAxisSpacing: 24,
+          crossAxisSpacing: 24,
+        )
       ],
     );
   }
