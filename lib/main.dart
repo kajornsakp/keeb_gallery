@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:keeb_gallery/ImageDetailPage.dart';
 import 'package:keeb_gallery/utils/utils.dart';
 
 void main() {
@@ -97,6 +98,10 @@ class ContentContainer extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  void _didSelectItem() {
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -161,38 +166,45 @@ class ContentContainer extends StatelessWidget {
           itemCount: getGalleryModels().length,
           itemBuilder: (BuildContext context, int index) {
             var model = getGalleryModels()[index];
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Container(
-                  child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(model.imgUrl), fit: BoxFit.cover),
-                    ),
-                  ),
-                  Container(
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                        Colors.white.withOpacity(0.0),
-                        Colors.black.withOpacity(0.6)
-                      ]))),
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Text(
-                        model.name,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  )
-                ],
-              )),
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute<void>(builder: (BuildContext context) {
+                  return ImageDetailPage();
+                }));
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                    child: Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(model.imgUrl), fit: BoxFit.cover),
+                          ),
+                        ),
+                        Container(
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.white.withOpacity(0.0),
+                                      Colors.black.withOpacity(0.6)
+                                    ]))),
+                        Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Text(
+                              model.name,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        )
+                      ],
+                    )),
+              ),
             );
           },
           staggeredTileBuilder: (int index) =>
