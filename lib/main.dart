@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           topLeft: Radius.circular(24),
                           topRight: Radius.circular(24))),
                   margin: EdgeInsets.only(top: 60),
-                  child: Container()
+                  child: ContentContainer()
               ),
               CircleAvatar(
                 radius: 60,
@@ -84,6 +84,68 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ContentContainer extends StatelessWidget {
+  const ContentContainer({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 56,
+        ),
+        Text(
+          "BeamZaMak",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Image.asset(
+          'assets/icon/setting.png',
+          height: 16,
+        ),
+        SizedBox(
+          height: 12,
+        ),
+        Text("Hi, Everyone. I'm a keebs lover"),
+        Text("let's find something yours!"),
+        SizedBox(
+          height: 32,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Column(
+              children: [
+                Text(
+                  "Gallery",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 4),
+                Icon(Icons.circle, size: 6)
+              ],
+            ),
+            Column(
+              children: [
+                Text(
+                  "Saved",
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black.withOpacity(0.7)),
+                ),
+                SizedBox(height: 4),
+                // Icon(Icons.circle, size: 6, color: Colors.black.withOpacity(0.7),)
+              ],
+            )
+          ],
+        ),
+      ],
     );
   }
 }
