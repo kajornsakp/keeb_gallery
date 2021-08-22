@@ -169,7 +169,7 @@ class ContentContainer extends StatelessWidget {
             return GestureDetector(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute<void>(builder: (BuildContext context) {
-                  return ImageDetailPage();
+                  return ImageDetailPage(imgUrl: model.imgUrl, name: model.name,);
                 }));
               },
               child: ClipRRect(
