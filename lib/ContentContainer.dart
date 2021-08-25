@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:keeb_gallery/GalleryImage.dart';
 import 'package:keeb_gallery/ImageDetailPage.dart';
 import 'package:keeb_gallery/utils/utils.dart';
 
@@ -70,30 +71,27 @@ class _ContentContainerState extends State<ContentContainer> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Material(
-              child: InkWell(
-                onTap: _didTapGalleryTab,
-                child: Column(
-                  children: [
-                    Text(
-                      "Gallery",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: selectedMode == Mode.gallery
-                              ? Colors.black
-                              : Colors.black.withOpacity(0.7)),
-                    ),
-                    SizedBox(height: 4),
-                    Visibility(
-                        visible: selectedMode == Mode.gallery,
-                        child: Icon(Icons.circle, size: 6))
-                  ],
-                ),
+            TextButton(
+              onPressed: _didTapGalleryTab,
+              child: Column(
+                children: [
+                  Text(
+                    "Gallery",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: selectedMode == Mode.gallery
+                            ? Colors.black
+                            : Colors.black.withOpacity(0.7)),
+                  ),
+                  SizedBox(height: 4),
+                  Visibility(
+                      visible: selectedMode == Mode.gallery,
+                      child: Icon(Icons.circle, size: 6))
+                ],
               ),
             ),
-            Material(
-              child: InkWell(
-                onTap: _didTapSavedTab,
+            TextButton(
+                onPressed: _didTapSavedTab,
                 child: Column(
                   children: [
                     Text(
@@ -109,147 +107,83 @@ class _ContentContainerState extends State<ContentContainer> {
                         visible: selectedMode == Mode.saved,
                         child: Icon(Icons.circle, size: 6))
                   ],
-                ),
-              ),
-            )
+                ))
           ],
         ),
         SizedBox(
           height: 16,
         ),
         Visibility(
-          visible: selectedMode == Mode.gallery,
-            child: StaggeredGridView.countBuilder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          crossAxisCount: 4,
-          itemCount: getGalleryModels().length,
-          itemBuilder: (BuildContext context, int index) {
-            var model = getGalleryModels()[index];
-            return GestureDetector(
-              onLongPress: () {
-                _didSaveGallery(model);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("${model.name}  saved"),
-                ));
-              },
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute<void>(builder: (BuildContext context) {
-                  return ImageDetailPage(
-                    imgUrl: model.imgUrl,
-                    name: model.name,
-                  );
-                }));
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Container(
-                    child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(model.imgUrl), fit: BoxFit.cover),
-                      ),
-                    ),
-                    Container(
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                          Colors.white.withOpacity(0.0),
-                          Colors.black.withOpacity(0.6)
-                        ]))),
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          model.name,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    )
-                  ],
-                )),
-              ),
-            );
-          },
-          staggeredTileBuilder: (int index) =>
-              new StaggeredTile.count(2, index.isEven ? 2 : 1),
-          mainAxisSpacing: 24,
-          crossAxisSpacing: 24,
-        )
-        ),
+            visible: selectedMode == Mode.gallery,
+            child: buildGalleryContent()),
         Visibility(
             visible: selectedMode == Mode.saved,
-            child: StaggeredGridView.countBuilder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              crossAxisCount: 1,
-              itemCount: savedItem.length,
-              itemBuilder: (BuildContext context, int index) {
-                var model = savedItem[index];
-                return GestureDetector(
-                  onLongPress: () {
-                    _removeFromSavedItem(model);
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("${model.name}  removed"),
-                    ));
-                  },
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute<void>(builder: (BuildContext context) {
-                          return ImageDetailPage(
-                            imgUrl: model.imgUrl,
-                            name: model.name,
-                          );
-                        }));
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Container(
-                        child: Stack(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage(model.imgUrl), fit: BoxFit.cover),
-                              ),
-                            ),
-                            Container(
-                                decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                          Colors.white.withOpacity(0.0),
-                                          Colors.black.withOpacity(0.6)
-                                        ]))),
-                            Padding(
-                              padding: EdgeInsets.all(8),
-                              child: Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Text(
-                                  model.name,
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            )
-                          ],
-                        )),
-                  ),
-                );
-              },
-              staggeredTileBuilder: (int index) =>
-              new StaggeredTile.count(2,1),
-              mainAxisSpacing: 24,
-              crossAxisSpacing: 24,
-            )
-        )
+            child: buildSavedItemContent()),
       ],
     );
+  }
+
+  StaggeredGridView buildGalleryContent() {
+    return StaggeredGridView.countBuilder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            itemCount: getGalleryModels().length,
+            itemBuilder: (BuildContext context, int index) {
+              var model = getGalleryModels()[index];
+              return GestureDetector(
+                onLongPress: () {
+                  _didSaveGallery(model);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("${model.name}  saved"),
+                  ));
+                },
+                onTap: () {
+                  showDetailScreen(context, model);
+                },
+                child: GalleryImage(model: model),
+              );
+            },
+            staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
+            mainAxisSpacing: 24,
+            crossAxisSpacing: 24,
+          );
+  }
+
+  StaggeredGridView buildSavedItemContent() {
+    return StaggeredGridView.countBuilder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            mainAxisSpacing: 24,
+            crossAxisSpacing: 24,
+            itemCount: savedItem.length,
+            itemBuilder: (BuildContext context, int index) {
+              var model = savedItem[index];
+              return GestureDetector(
+                onLongPress: () {
+                  _removeFromSavedItem(model);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("${model.name}  saved"),
+                  ));
+                },
+                onTap: () {
+                  showDetailScreen(context, model);
+                },
+                child: GalleryImage(model: model),
+              );
+            },
+            staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
+          );
+  }
+
+  void showDetailScreen(BuildContext context, Gallery model) {
+    Navigator.push(context,
+        MaterialPageRoute<void>(builder: (BuildContext context) {
+      return ImageDetailPage(
+        imgUrl: model.imgUrl,
+        name: model.name,
+      );
+    }));
   }
 }

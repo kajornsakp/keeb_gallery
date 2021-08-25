@@ -29,17 +29,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: Builder(
           builder: (context) => IconButton(
@@ -60,34 +54,39 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Container(),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
+        child: CustomScrollView(
+          slivers: [
+            SliverList(delegate: SliverChildListDelegate(
+              [
                 Container(
-                  height: 120,
-                  color: Color(0xffDBAC9A),
-                ),
-                Container(
-                    padding: EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(24),
-                            topRight: Radius.circular(24))),
-                    margin: EdgeInsets.only(top: 60),
-                    child: ContentContainer()),
-                CircleAvatar(
-                  radius: 60,
-                  backgroundImage: AssetImage('assets/image/profile.png'),
-                ),
-              ],
-            ),
-          ),
+                  child: Stack(
+                    alignment: Alignment.topCenter,
+                    children: [
+                      Container(
+                        height: 120,
+                        color: Color(0xffDBAC9A),
+                      ),
+                      Container(
+                          padding: EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(24),
+                                  topRight: Radius.circular(24))),
+                          margin: EdgeInsets.only(top: 60),
+                          child: ContentContainer()),
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundImage: AssetImage('assets/image/profile.png'),
+                      ),
+                    ],
+                  ),
+                )
+              ]
+            ))
+          ],
         ),
       ),
     );
   }
 }
-
